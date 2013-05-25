@@ -106,7 +106,7 @@ public class VirtualDesktop : IDisposable
         return GetThreadDesktop(GetCurrentThreadId());
     }
      
-    private IntPtr OpenDesktop()
+    private IntPtr LaunchDesktop()
     {
         return CreateDesktop(_sMyDesk, IntPtr.Zero, IntPtr.Zero,
                              0, (long)DESKTOP_ACCESS_MASK.EVERYTHING, IntPtr.Zero);
@@ -124,16 +124,16 @@ public class VirtualDesktop : IDisposable
     #endregion
 
     #region Constructors
-	  public VirtualDesktop()
-	  {
-	    	_sMyDesk = "";
-	  }
+    public VirtualDesktop()
+    {
+        _sMyDesk = ""
+    }
 
-	  public VirtualDesktop(string sDesktopName)
-	  {
-		   _hOrigDesktop = GetCurrentDesktopPtr();
-		   _sMyDesk = sDesktopName;
-		   DesktopPtr = LaunchDesktop();
-	  }
+    public VirtualDesktop(string sDesktopName)
+    {
+	_hOrigDesktop = GetCurrentDesktopPtr();
+	_sMyDesk = sDesktopName;
+	DesktopPtr = LaunchDesktop();
+    }
     #endregion
 }
