@@ -77,20 +77,20 @@ public class VirtualDesktop : IDisposable
     #endregion
     
     #region Disposal Methods
-    // 1) Switch to the desktop we were on before.
+    // Switch to the desktop we were on before.
     public void Dispose() {
         SwitchToOrginal();
         ((IDisposable)this).Dispose();
     }
      
-    // 2) Delete our custom one.
+    // Delete our custom one.
     protected virtual void Dispose(bool disposing) {
         if (disposing) {
             CloseDesktop(DesktopPtr);
         }
     }
      
-    // 3) ... flush!
+    // ... flush!
     void IDisposable.Dispose() {
         Dispose(true);
         
