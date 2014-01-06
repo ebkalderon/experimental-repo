@@ -126,7 +126,7 @@ public class VirtualDesktop : IDisposable
     #region Constructors
     public VirtualDesktop()
     {
-        _sMyDesk = ""
+        _sMyDesk = "";
     }
 
     public VirtualDesktop(string sDesktopName)
