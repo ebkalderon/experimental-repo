@@ -1,27 +1,27 @@
-/**********************************************************************************
- * VirtualDesktop.cs - A desktop creation/deletion/switching class for Windows.   *
- * Copyright (c) 2013 Eyal Kalderon                                               *
- *                                                                                *
- * The MIT License (MIT)                                                          *
- *                                                                                *
- * Permission is hereby granted, free of charge, to any person obtaining a copy   *
- * of this software and associated documentation files (the "Software"), to deal  *
- * in the Software without restriction, including without limitation the rights   *
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell      *
- * copies of the Software, and to permit persons to whom the Software is          *
- * furnished to do so, subject to the following conditions:                       *
- *                                                                                *
- * The above copyright notice and this permission notice shall be included in     *
- * all copies or substantial portions of the Software.                            *
- *                                                                                *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR     *
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,       *
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE    *
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER         *
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,  *
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN      *
- * THE SOFTWARE.                                                                  *
- **********************************************************************************/
+/*
+ * VirtualDesktop.cs - A desktop creation/deletion/switching class for Windows.
+ * Copyright (c) 2013, 2014, 2016 Eyal Kalderon
+ *
+ * The MIT License (MIT)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 
 using System;
 using System.Collections.Generic;
@@ -31,7 +31,8 @@ using System.Text;
 public class VirtualDesktop : IDisposable
 {
     // These security descriptors below are required to let us manipulate the desktop objects.
-    internal enum DESKTOP_ACCESS_MASK : uint {
+    internal enum DESKTOP_ACCESS_MASK : uint
+    {
         DESKTOP_NONE = 0,
         DESKTOP_READOBJECTS = 0x0001,
         DESKTOP_CREATEWINDOW = 0x0002,
@@ -42,7 +43,6 @@ public class VirtualDesktop : IDisposable
         DESKTOP_ENUMERATE = 0x0040,
         DESKTOP_WRITEOBJECTS = 0x0080,
         DESKTOP_SWITCHDESKTOP = 0x0100,
- 
         EVERYTHING = (DESKTOP_READOBJECTS | DESKTOP_CREATEWINDOW | DESKTOP_CREATEMENU |
                       DESKTOP_HOOKCONTROL | DESKTOP_JOURNALRECORD | DESKTOP_JOURNALPLAYBACK |
                       DESKTOP_ENUMERATE | DESKTOP_WRITEOBJECTS | DESKTOP_SWITCHDESKTOP),
@@ -76,22 +76,26 @@ public class VirtualDesktop : IDisposable
     private static extern bool SwitchDesktop(IntPtr hDesktop);
     #endregion
     
-    #region Disposal Methods
+    #region Destructors
     // Switch to the desktop we were on before.
-    public void Dispose() {
+    public void Dispose()
+    {
         SwitchToOrginal();
         ((IDisposable)this).Dispose();
     }
      
     // Delete our custom one.
-    protected virtual void Dispose(bool disposing) {
-        if (disposing) {
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
             CloseDesktop(DesktopPtr);
         }
     }
      
     // ... flush!
-    void IDisposable.Dispose() {
+    void IDisposable.Dispose()
+    {
         Dispose(true);
         
         // This takes the already destroyed desktop off the finalization queue so the GC
@@ -112,12 +116,14 @@ public class VirtualDesktop : IDisposable
                              0, (long)DESKTOP_ACCESS_MASK.EVERYTHING, IntPtr.Zero);
     }
      
-    public void ShowDesktop() {
+    public void ShowDesktop()
+    {
         SetThreadDesktop(DesktopPtr);
         SwitchDesktop(DesktopPtr);
     }
      
-    public void SwitchToOrginal() {
+    public void SwitchToOrginal()
+    {
         SwitchDesktop(_hOrigDesktop);
         SetThreadDesktop(_hOrigDesktop);
     }
